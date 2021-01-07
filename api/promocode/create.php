@@ -8,51 +8,57 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 include_once('../config/database.php');
 include_once('../objects/promocode.php');
 
-$database =  new Database();
-$db = $database->getConnection();
-
-$promoCode = new Promocode($db);
-
+$promoCode = new Promocode($conn);
 //get posted data
 $data = json_decode(file_get_contents("php://input"));
   
-
+// echo $data->validity;
 
 
 if(
     !empty($data->promocode) &&
-    !empty($data->radius) &&
-    !empty($data->description) &&
+    !empty($data->cordRadius) &&
+    !empty($data->promoDesc) &&
     !empty($data->originCords) &&
-    !empty()
+    !empty($data->destCords)&&
+    !empty($data->number_of_rides)&&
+    !empty($data->validity)&&
+    !empty($data->status)
+  
 ){
   
-    // set product property values
-    $product->name = $data->name;
-    $product->price = $data->price;
-    $product->description = $data->description;
-    $product->category_id = $data->category_id;
-    $product->created = date('Y-m-d H:i:s');
-  
-    // create the product
-    if($product->create()){
+    // set promocode property values
+    $promoCode->promocode = $data->promocode;
+    $promoCode->promoDesc = $data->promoDesc;
+    $promoCode->cordRadius = $data->cordRadius;
+    $promoCode->originCords = $data->originCords;
+    $promoCode->destCords = $data->destCords;
+    $promoCode->numberofRides = $data->number_of_rides;
+    $promoCode->validity = $data->validity;
+    $promoCode->promostatus = $data->status;
+  //$promoCode->promostatus;
+//    echo $promocode->validity;
+    // create the promocode
+    if($promoCode->create()){
   
         // set response code - 201 created
         http_response_code(201);
-  
+      
         // tell the user
-        echo json_encode(array("message" => "Product was created."));
+        echo json_encode(array("message" => "Promo code was created."));
     }
-  
-    // if unable to create the product, tell the user
+    // if unable to create the promocode, tell the user
     else{
-  
         // set response code - 503 service unavailable
         http_response_code(503);
   
         // tell the user
-        echo json_encode(array("message" => "Unable to create product."));
+        echo json_encode(array("message" => "Unable to create Promocode."));
     }
+}else{
+
+    echo json_encode(array("message" => "incomplete promocode details inputted"));
+
 }
 
 ?>

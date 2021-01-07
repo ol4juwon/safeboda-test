@@ -19,6 +19,8 @@
          echo $conn->connect_error;
          exit();
    
+     }else{
+       echo "connection success \n ";
      }
 
     
