@@ -79,6 +79,31 @@ function readOne($pcode){
   
     // execute query
     if($stmt->execute()){
+      return $query;
+    }
+}
+
+function validate($pcode,$dest){
+    $query = "SELECT * from ".$this->db_table." WHERE 
+    promocode = '".$pcode."' and ride_dest_geocode = '".$dest."' ";
+
+    $stmt = $this->conn->prepare( $query );
+//echo $stmt;
+    // execute query
+    if($stmt->execute()){  
+        return $query;
+    }
+}
+
+
+function activeCodes(){
+    $query = "SELECT * from ".$this->db_table." WHERE active = '1'  ";
+
+    $stmt = $this->conn->prepare( $query );
+
+  
+    // execute query
+    if($stmt->execute()){
 
 
 
@@ -87,7 +112,43 @@ function readOne($pcode){
 
 
 
-
 }
+
+
+function activateCode($pcode){
+    $query = " UPDATE ". $this->db_table. " 
+    SET validity='1'  WHERE promocode = :code";
+    //echo $query;
+     $stmt = $this->conn->prepare($query);
+    // echo $this->pcode;
+     $this->pcode=htmlspecialchars(strip_tags($pcode));
+     echo "k"; 
+     $stmt->bindparam(':code',$this->pcode);
+     echo $stmt;
+    if($stmt ->execute()){
+    
+    return $query;
+    }
+    return false;
+    
+    }
+
+
+
+
+function deactivateCode($pcode){
+    $query = " UPDATE ". $this->db_table. " 
+    SET validity= '0'  WHERE promocode = '".$pcode."'";
+    echo $query;
+     $stmt = $this->conn->prepare($query);
+    if($stmt ->execute()){
+    
+    return $query;
+    }else{
+        $this->conn->error;
+    }
+    
+    }
+
 }
 ?>

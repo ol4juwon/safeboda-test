@@ -10,39 +10,44 @@ include_once('../objects/promocode.php');
 // echo $db;
 
 
+//$pcode = isset($_GET['pcode']) ? $_GET['pcode']: $msg="dead";
+
 $promoCode = new Promocode($conn);
 // query promo codes
 
-$stmt = $promoCode->read();
+$pcode = isset($_GET['pcode']) ? $_GET['pcode']: $msg="dead";
+$dest = isset($_GET['dest']) ? $_GET['dest']: $msg="dest";
+// echo $pcode.$dest;
+$stmt = $promoCode->validate($pcode, $dest);
 
-$result = $conn->query($stmt);
-
-
-if($result->num_rows > 0 ){
+echo "ii";
+ $result = $conn->query($stmt);
+echo $stmt;
+if($result->num_rows >0){
 
 
     $promoCode_arr = array();
-    $promocode["records"] = array();
+    $promoCode_arr["records"] = array();
     while($row = $result->fetch_assoc()){
 
         extract($row);
-
         $promoCode_item = array(
             "id" => $id,
-            "promocode_Desc" => $promoDesc,
+            "promocode_Desc" => $promocode_desc,
             "promocode" => $promocode,
-            "promo_rad" => $cordRadius,
-            "ride_origin_geocode" => $originCords,
-            "ride_dest_geocode" => $destCords,
-            "number_rides" => $numberofRides,
-            "Active" => $promostatus,
+            "promo_rad" => $promo_rad,
+            "ride_origin_geocode" => $ride_origin_geocode,
+            "ride_dest_geocode" => $ride_dest_geocode,
+            "number_rides" => $number_rides,
+            "Active" => $Active,
             "validity" => $validity
         );
+       // echo $promoCode_item['id'];
         array_push($promoCode_arr['records'],$promoCode_item);
     }
     http_response_code(200);
 
-    echo json_encode($promoCode_arr);
+    echo json_encode($promoCode_arr['records']);
 }else{
     http_response_code(404);
     echo json_encode(
