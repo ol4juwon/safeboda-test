@@ -82,7 +82,7 @@ function validate($pcode,$long,$lat){
     promocode = '".$pcode."' and eventLat = '".$lat."' and eventLong ='".$long."' ";
 
     $stmt = $this->conn->prepare( $query );
-//echo $stmt;
+
     // execute query
     if($stmt->execute()){  
         return $query;
@@ -119,7 +119,7 @@ function activateCode($pcode){
     //  echo $this->pcode;
      //$stmt->bindparam(':code',$this->pcode);
      $stmt = $this->conn->prepare($query);
-     echo $query;
+     
     if($stmt->execute()){
     // echo "hi";
     //echo $query;
