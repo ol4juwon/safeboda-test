@@ -14,15 +14,21 @@ include_once('../objects/promocode.php');
 
 $promoCode = new Promocode($conn);
 // query promo codes
+$data = json_decode(file_get_contents("php://input"));
 
-$pcode = isset($_GET['pcode']) ? $_GET['pcode']: $msg="dead";
-$dest = isset($_GET['dest']) ? $_GET['dest']: $msg="dest";
-// echo $pcode.$dest;
-$stmt = $promoCode->validate($pcode, $dest);
+$pcode = $data->promocode;
+$long = $data->eventLong;
+$lat = $data->eventLat;
 
-echo "ii";
+$strip_pcode = htmlspecialchars(strip_tags($pcode));
+$strip_long = htmlspecialchars(strip_tags($long));
+$strip_lat = htmlspecialchars(strip_tags($lat));
+
+$stmt = $promoCode->validate($strip_pcode, $strip_long,$strip_lat);
+
+
  $result = $conn->query($stmt);
-echo $stmt;
+
 if($result->num_rows >0){
 
 
@@ -33,21 +39,24 @@ if($result->num_rows >0){
         extract($row);
         $promoCode_item = array(
             "id" => $id,
-            "promocode_Desc" => $promocode_desc,
-            "promocode" => $promocode,
-            "promo_rad" => $promo_rad,
-            "ride_origin_geocode" => $ride_origin_geocode,
-            "ride_dest_geocode" => $ride_dest_geocode,
-            "number_rides" => $number_rides,
-            "Active" => $Active,
-            "validity" => $validity
+            "Promocode Description/ Event Name" => $promocode_desc,
+            "Promo Code" => $promocode,
+            "Event Radius" => $cordRad,
+            "Event Latitude" => $eventLat,
+            "Event Longitude" => $eventLong,
+            "number of rides" => $number_rides,
+            "Active status " => $Active,
+            "validity" => $valid_thru,
+            "Amount " => $amount
         );
-       // echo $promoCode_item['id'];
         array_push($promoCode_arr['records'],$promoCode_item);
     }
     http_response_code(200);
 
     echo json_encode($promoCode_arr['records']);
+    echo json_encode(
+        array("message" => "promocode valid for trip")
+    );
 }else{
     http_response_code(404);
     echo json_encode(

@@ -14,29 +14,31 @@ $promoCode = new Promocode($conn);
 // query promo codes
 
 $stmt = $promoCode->read();
-
+echo $stmt;
 $result = $conn->query($stmt);
 
 
 if($result->num_rows > 0 ){
+    echo "s";
 
 
     $promoCode_arr = array();
-    $promocode["records"] = array();
+    $promoCode_arr["records"] = array();
     while($row = $result->fetch_assoc()){
 
         extract($row);
-
+echo ";";
         $promoCode_item = array(
             "id" => $id,
-            "promocode_Desc" => $promoDesc,
+            "promocode_Desc" => $promocode_desc,
             "promocode" => $promocode,
-            "promo_rad" => $cordRadius,
-            "ride_origin_geocode" => $originCords,
-            "ride_dest_geocode" => $destCords,
-            "number_rides" => $numberofRides,
-            "Active" => $promostatus,
-            "validity" => $validity
+            "promo_rad" => $cordRad,
+            "ride_origin_geocode" => $eventLat,
+            "ride_dest_geocode" => $eventLong,
+            "number_rides" => $number_rides,
+            "Active" => $active,
+            "validity" => $valid_thru,
+            "amount" => $amount
         );
         array_push($promoCode_arr['records'],$promoCode_item);
     }

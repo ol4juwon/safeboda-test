@@ -10,29 +10,29 @@ include_once('../objects/promocode.php');
 
 $promoCode = new Promocode($conn);
 //echo $_GET['pcode'];
-
+$data = json_decode(file_get_contents("php://input"));
 // $promoCode->promocode = isset($_GET['pcode']) ? $_GET['pcode']: $msg="dead";
-$pcode = isset($_GET['pcode']) ? $_GET['pcode']: $msg="dead";
-$stmt = $promoCode->readOne($pcode);
+$pcode = $data->promocode;
+$strip_code = htmlspecialchars(strip_tags($pcode));
+$stmt = $promoCode->readOne($strip_code);
 $result = $conn->query($stmt);
 
-echo $pcode;
 if($result->num_rows>0){
-    echo " promocode: ".$promoCode->promocode." is  q\n";
 
     $row = $result->fetch_assoc();
     extract($row);
     // create array
     $promocode_arr = array(
         "id" => $id,
-        "promocode_Desc" => $promocode_desc,
-        "promocode" => $promocode,
-        "promo_rad" => $promo_rad,
-        "ride_origin_geocode" => $ride_origin_geocode,
-        "ride_dest_geocode" => $ride_dest_geocode,
-        "number_rides" => $number_rides,
-        "Active" => $Active,
-        "validity" => $validity
+        "Promocode Description/ Event Name" => $promocode_desc,
+        "Promo Code" => $promocode,
+        "Event Radius" => $cordRad,
+        "Event Latitude" => $eventLat,
+        "Event Longitude" => $eventLong,
+        "number of rides" => $number_rides,
+        "Active status " => $Active,
+        "validity" => $valid_thru,
+        "Amount " => $amount
     );
   
     // set response code - 200 OK

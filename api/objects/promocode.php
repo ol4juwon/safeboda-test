@@ -21,16 +21,31 @@ public function __construct($db){
 }
 
 function read(){
-$query = " SELECT * from ". $this->db_table. " ORDER BY validity";
+$query = " SELECT * from ". $this->db_table. " ORDER BY id";
 //echo $query;
  $stmt = $this->conn->prepare($query);
 if($stmt ->execute()){
 
 return $query;
+}else{
+    echo $this->conn->error;
 }
 
 }
 
+function readOne($pcode){
+    $query = "SELECT * from ".$this->db_table." WHERE promocode = '".$pcode."'LIMIT 0,1 ";
+
+    $stmt = $this->conn->prepare( $query );
+
+  
+    // execute query
+    if($stmt->execute()){
+      return $query;
+    }else{
+        echo $this->conn->error;
+    }
+}
 function create(){
     
 $this->promocode = htmlspecialchars(strip_tags($this->promocode));
@@ -49,18 +64,7 @@ $query = "INSERT INTO ".$this->db_table."  (promocode_desc,promocode,number_ride
 
 
 $stmt = $this->conn->prepare($query);
-// $stmt->bindParam(":promoDesc",$this->promoDesc);
 
-// $stmt->bindParam(":promocode",$this->promocode);
-// $stmt->bindParam(":numberofRides",$this->numberofRides);
-// $stmt->bindParam(":promostatus",$this->promostatus);
-// $stmt->bindParam(":originCords",$this->originCords);
-// $stmt->bindParam(":destCords",$this->destCords);
-// $stmt->bindParam(":validity",$this->validity);
-// $stmt->bindParam(":cordRadius",$this->cordRadius);
-// echo $stmt;
-// echo $query;
-// echo "j";
 if($stmt->execute()){
 return true;
 }else{
@@ -69,27 +73,13 @@ return true;
 return false;}
 
 
-
-
-
-
 }
 
-function readOne($pcode){
-    $query = "SELECT * from ".$this->db_table." WHERE promocode = '".$pcode."'LIMIT 0,1 ";
 
-    $stmt = $this->conn->prepare( $query );
 
-  
-    // execute query
-    if($stmt->execute()){
-      return $query;
-    }
-}
-
-function validate($pcode,$dest){
+function validate($pcode,$long,$lat){
     $query = "SELECT * from ".$this->db_table." WHERE 
-    promocode = '".$pcode."' and ride_dest_geocode = '".$dest."' ";
+    promocode = '".$pcode."' and eventLat = '".$lat."' and eventLong ='".$long."' ";
 
     $stmt = $this->conn->prepare( $query );
 //echo $stmt;
@@ -121,7 +111,7 @@ function activeCodes(){
 
 function activateCode($pcode){
     $query = " UPDATE promocodes 
-    SET validity='1'  WHERE promocode = '".$pcode."' and validity != 1";
+    SET active='1'  WHERE promocode = '".$pcode."' and active != 1";
    // echo $query;
      $stmt = mysqli_prepare($this->conn,$query);
     //echo $this->pcode;
@@ -129,13 +119,13 @@ function activateCode($pcode){
     //  echo $this->pcode;
      //$stmt->bindparam(':code',$this->pcode);
      $stmt = $this->conn->prepare($query);
-     
+     echo $query;
     if($stmt->execute()){
     // echo "hi";
     //echo $query;
      return $stmt;
     }else{
-        echo mysqli_error($this->conn);
+        echo $this->conn->error;
     }
 }
 
@@ -144,7 +134,7 @@ function activateCode($pcode){
 
 function deactivateCode($pcode){
     $query = " UPDATE promocodes 
-    SET validity='0'  WHERE promocode = '".$pcode."' and validity != 0";
+    SET active='0'  WHERE promocode = '".$pcode."' and active != 0";
    // echo $query;
      $stmt = mysqli_prepare($this->conn,$query);
     //echo $this->pcode;

@@ -7,11 +7,9 @@ include_once('../objects/promocode.php');
 
 
 
-// echo $db;
-
 
 $promoCode = new Promocode($conn);
-// query promo codes
+
 
 $stmt = $promoCode->activeCodes();
 
@@ -21,7 +19,7 @@ $result = $conn->query($stmt);
 if($result->num_rows > 0 ){
 
 
-    $promoCode_arr = array();
+    $promocode = array();
     $promocode["records"] = array();
     while($row = $result->fetch_assoc()){
 
@@ -29,21 +27,21 @@ if($result->num_rows > 0 ){
 
         $promoCode_item = array(
             "id" => $id,
-            "promocode_Desc" => $promoDesc,
+            "promocode_Desc" => $promocode_desc,
             "promocode" => $promocode,
-            "promo_rad" => $cordRadius,
-            "ride_origin_geocode" => $originCords,
-            "ride_dest_geocode" => $destCords,
-            "number_rides" => $numberofRides,
-            "Active" => $promostatus,
-            "validity" => $validity,
+            "promo_rad" => $cordRad,
+            "ride_origin_geocode" => $eventLat,
+            "ride_dest_geocode" => $eventLong,
+            "number_rides" => $number_rides,
+            "Active" => $active,
+            "validity" => $valid_thru,
             "amount" => $amount
         );
-        array_push($promoCode_arr['records'],$promoCode_item);
+        array_push($promocode['records'],$promoCode_item);
     }
     http_response_code(200);
 
-    echo json_encode($promoCode_arr);
+    echo json_encode($promocode);
 }else{
     http_response_code(404);
     echo json_encode(

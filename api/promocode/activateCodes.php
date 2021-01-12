@@ -8,12 +8,13 @@ include_once('../objects/promocode.php');
 
 
 // echo $db;
-$act_code = isset($_GET['promocode'])? $_GET['promocode'] : $msg;
-$strip_code = htmlspecialchars(strip_tags($act_code));
+
 $promoCode = new Promocode($conn);
-// echo "hi ";
+$data = json_decode(file_get_contents("php://input"));
+$pcode = $data->promocode;
+$strip_code = htmlspecialchars(strip_tags($pcode));
  $activa = $promoCode->activateCode($strip_code);
- 
+
     
 if($activa->affected_rows >0){
     http_response_code(200);
