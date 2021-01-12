@@ -36,7 +36,8 @@ if($result->num_rows > 0 ){
             "ride_dest_geocode" => $destCords,
             "number_rides" => $numberofRides,
             "Active" => $promostatus,
-            "validity" => $validity
+            "validity" => $validity,
+            "amount" => $amount
         );
         array_push($promoCode_arr['records'],$promoCode_item);
     }
@@ -46,7 +47,7 @@ if($result->num_rows > 0 ){
 }else{
     http_response_code(404);
     echo json_encode(
-        array("message" => "No promocode found.")
+        array("message" => "No active promocodes found.")
     );
 }
 

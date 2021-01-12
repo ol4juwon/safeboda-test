@@ -23,7 +23,8 @@ if(
     !empty($data->destCords)&&
     !empty($data->number_of_rides)&&
     !empty($data->validity)&&
-    !empty($data->status)
+    !empty($data->status)&&
+    !empty($data->amount)
   
 ){
   
@@ -36,11 +37,13 @@ if(
     $promoCode->numberofRides = $data->number_of_rides;
     $promoCode->validity = $data->validity;
     $promoCode->promostatus = $data->status;
+     $promoCode->amount = $data->amount;
   //$promoCode->promostatus;
 //    echo $promocode->validity;
     // create the promocode
+    
     if($promoCode->create()){
-  
+        // echo "ji";
         // set response code - 201 created
         http_response_code(201);
       
@@ -50,8 +53,9 @@ if(
     // if unable to create the promocode, tell the user
     else{
         // set response code - 503 service unavailable
+        //echo $this->conn->error;
         http_response_code(503);
-  
+ 
         // tell the user
         echo json_encode(array("message" => "Unable to create Promocode."));
     }

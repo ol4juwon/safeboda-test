@@ -51,7 +51,7 @@ if($result->num_rows >0){
 }else{
     http_response_code(404);
     echo json_encode(
-        array("message" => "No promocode found.")
+        array("message" => "promocode invalid for trip")
     );
 }
 
