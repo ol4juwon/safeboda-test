@@ -20,7 +20,7 @@
          exit();
    
      }else{
-       echo "connection success \n ";
+       
      }
 
     

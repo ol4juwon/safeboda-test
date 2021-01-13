@@ -112,17 +112,11 @@ function activeCodes(){
 function activateCode($pcode){
     $query = " UPDATE promocodes 
     SET active='1'  WHERE promocode = '".$pcode."' and active != 1";
-   // echo $query;
-     $stmt = mysqli_prepare($this->conn,$query);
-    //echo $this->pcode;
-     //$this->pcode=htmlspecialchars(strip_tags($pcode));
-    //  echo $this->pcode;
-     //$stmt->bindparam(':code',$this->pcode);
-     $stmt = $this->conn->prepare($query);
+    $stmt = mysqli_prepare($this->conn,$query);
+   $stmt = $this->conn->prepare($query);
      
     if($stmt->execute()){
-    // echo "hi";
-    //echo $query;
+    
      return $stmt;
     }else{
         echo $this->conn->error;

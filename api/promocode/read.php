@@ -14,12 +14,12 @@ $promoCode = new Promocode($conn);
 // query promo codes
 
 $stmt = $promoCode->read();
-echo $stmt;
+
 $result = $conn->query($stmt);
 
 
 if($result->num_rows > 0 ){
-    echo "s";
+   
 
 
     $promoCode_arr = array();
@@ -27,7 +27,7 @@ if($result->num_rows > 0 ){
     while($row = $result->fetch_assoc()){
 
         extract($row);
-echo ";";
+
         $promoCode_item = array(
             "id" => $id,
             "promocode_Desc" => $promocode_desc,
